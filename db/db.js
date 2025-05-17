@@ -1,13 +1,21 @@
 require("dotenv").config();
+const { Pool } = require("pg");
+const fs = require("fs");
 
-const { Pool } = require('pg')
-
-const fecapayDB = new Pool ({
-        connectionString: process.env.DATABASE_URL,
+const fecapayDB = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD, 
+    port: process.env.DB_PORT || 5432,
+    ssl: {
+        rejectUnauthorized: false,
+        ca: process.env.SSL_CERT ? fs.readFileSync(process.env.SSL_CERT) : undefined
+    }
 });
 
 fecapayDB.connect()
-    .then(() => console.log("Conectado ao DB"))
-    .catch(error => console.error("Não conectado", error))
+    .then(() => console.log("Conectado ao Banco de Dados!"))
+    .catch(error => console.error("Erro ao conectar:", error));
 
-module.exports = fecapayDB    
+module.exports = fecapayDB;
