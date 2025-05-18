@@ -27,11 +27,15 @@ exports.payment = async(req, res) =>{
             if(!lojasValidas.includes(loja)){
                 return res.status(400).json({message: `Loja inválida: ${loja}`})
             }
-            const result = await fecapayDB.query(`SELECT * FROM ${loja} WHERE id $1`, [item_id])
+
+            const result = await fecapayDB.query(`SELECT * FROM ${loja} WHERE id = $1`, [item_id])
+
             if(result.rowCount === 0){
                 return res.status(404).json({message: `Item ${item_id} não encontrado na loja ${loja}`})
             }
+
             const produto = result.rows[0]
+            
             const precoTotalItem = parseFloat(produto.preco) * quantidade
             totalCompra += precoTotalItem
 
@@ -51,6 +55,7 @@ exports.payment = async(req, res) =>{
             }
 
             await fecapayDB.query('BEGIN')
+
             for(const item of itensValidados){
                 await fecapayDB.query(
                     `INSERT INTO compras(item_id, ra, quantidade, preco) VALUES ($1, $2, $3, $4, $5)`, [item.item_id, ra, item.loja, item.quantidade, item.preco_unitario]
@@ -59,8 +64,10 @@ exports.payment = async(req, res) =>{
                     `UPDATE ${item.loja} SET estoque = estoque - $1 WHERE id = $2`,[item.quantidade, item.item_id]
                 )
             }
+
             const novoSaldo = saldoAtual - totalCompra
             await atualizarSaldo(ra, novoSaldo)
+            
             await fecapayDB.query('COMMIT')
 
             return res.status(200).json({message:"Pagamento realizado com sucesso.", novoSaldo})
