@@ -18,3 +18,4 @@ exports.getProducts = async(table) =>{
         throw new Error('Erro ao acessar o banco de dados.');
     }
 }
+
