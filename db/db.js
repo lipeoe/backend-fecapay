@@ -2,7 +2,7 @@ require("dotenv").config();
 const { Pool } = require("pg");
 const fs = require("fs");
 
-let config;
+let config
 
 if (process.env.DATABASE_URL) {
     console.log("Conectado Localmente")
@@ -14,7 +14,7 @@ if (process.env.DATABASE_URL) {
                   ca: process.env.SSL_CERT ? fs.readFileSync(process.env.SSL_CERT) : undefined
               }
             : false
-    };
+    }
 } else {
     console.log("Conectado na azure")
     config = {
@@ -29,13 +29,13 @@ if (process.env.DATABASE_URL) {
                   ca: process.env.SSL_CERT ? fs.readFileSync(process.env.SSL_CERT) : undefined
               }
             : false
-    };
+    }
 }
 
-const fecapayDB = new Pool(config);
+const fecapayDB = new Pool(config)
 
 fecapayDB.connect()
     .then(() => console.log("✅ Conectado ao banco de dados!"))
-    .catch(error => console.error("❌ Erro ao conectar:", error));
+    .catch(error => console.error("❌ Erro ao conectar:", error))
 
-module.exports = fecapayDB;
+module.exports = fecapayDB

@@ -8,6 +8,7 @@ const boletoRoutes = require('./routes/boletosRoutes')
 const produtosRoutes = require('./routes/produtosRoutes')
 const comprasRoutes = require('./routes/comprasRoutes')
 const transactionsRoutes = require('./routes/transactionRoutes')
+const financasRoutes = require('./routes/financasRoutes')
 
 
 const PORT = process.env.PORT || 3001
@@ -15,7 +16,7 @@ const PORT = process.env.PORT || 3001
 app.use(express.json())
 app.use(cors())
 
-app.use('/api', userRoutes, balanceRoutes, boletoRoutes, produtosRoutes, comprasRoutes, transactionsRoutes)
+app.use('/api', userRoutes, balanceRoutes, boletoRoutes, produtosRoutes, comprasRoutes, transactionsRoutes, financasRoutes)
 
 
 app.listen(PORT, () =>{
